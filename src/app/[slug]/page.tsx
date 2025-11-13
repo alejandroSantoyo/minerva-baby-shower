@@ -22,8 +22,12 @@ async function getInvitation(slug: string): Promise<Invitation | null> {
   return res.json();
 }
 
-export default async function Home(props: { params: { slug: string } }) {
-  const { slug } = await props.params;
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params; // ✅ resolver la promesa
   const invitation = await getInvitation(slug);
 
   if (!invitation) {
