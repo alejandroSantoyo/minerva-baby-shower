@@ -1,0 +1,39 @@
+import styles from "../page.module.css";
+import "../globals.css";
+import Invitation from "@/components/Landing/Invitation";
+import Details from "@/components/Landing/Details";
+import { BASE_URL } from "constants/appConstants";
+
+export interface Invitation {
+  id: string;
+  guest: string;
+  slug: string;
+  totalPasses: number;
+  confirmedPasses?: number;
+  confirmed: boolean;
+}
+
+async function getInvitation(slug: string): Promise<Invitation | null> {
+  const res = await fetch(`${BASE_URL}/api/invitation/${slug}`, {
+    cache: "no-store", // asegura que siempre sea fresco
+  });
+
+  if (!res.ok) return null;
+  return res.json();
+}
+
+export default async function Home(props: { params: { slug: string } }) {
+  const { slug } = await props.params;
+  const invitation = await getInvitation(slug);
+
+  if (!invitation) {
+    return <div>YOU'RE NOT INVITED</div>;
+  }
+
+  return (
+    <div className={styles.page}>
+      <Invitation guest={invitation.guest} />
+      <Details invitation={invitation} />
+    </div>
+  );
+}
