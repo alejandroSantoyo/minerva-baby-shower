@@ -3,6 +3,7 @@ import "../globals.css";
 import Invitation from "@/components/Landing/Invitation";
 import Details from "@/components/Landing/Details";
 import { BASE_URL } from "constants/appConstants";
+import { prisma } from "@/lib/prisma";
 
 export interface Invitation {
   id: string;
@@ -29,8 +30,11 @@ export default async function Home({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params; // ✅ resolver la promesa
-  const invitation = await getInvitation(slug);
+  const { slug } = await params;
+
+  const invitation = await prisma.invitation.findUnique({
+    where: { slug },
+  });
 
   if (!invitation) {
     return <div>YOU'RE NOT INVITED</div>;
