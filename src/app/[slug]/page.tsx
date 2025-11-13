@@ -32,9 +32,9 @@ export default async function Home({
 }) {
   const { slug } = await params;
 
-  const invitation = await prisma.invitation.findUnique({
+  const invitation = (await prisma.invitation.findUnique({
     where: { slug },
-  });
+  })) as Invitation;
 
   if (!invitation) {
     return <div>YOU'RE NOT INVITED</div>;
