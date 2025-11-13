@@ -157,7 +157,7 @@ export default function Details({ invitation }: DetailsProps) {
 
   const handleConfirmInvitation = async () => {
     const data = await fetch(
-      `${BASE_URL}/api/invitation/${invitation.slug}/confirmation`,
+      `/api/invitation/${invitation.slug}/confirmation`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

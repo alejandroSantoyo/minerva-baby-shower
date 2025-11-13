@@ -14,10 +14,12 @@ export interface Invitation {
 }
 
 async function getInvitation(slug: string): Promise<Invitation | null> {
+  console.log("BASE_URL", BASE_URL);
   const res = await fetch(`${BASE_URL}/api/invitation/${slug}`, {
     cache: "no-store", // asegura que siempre sea fresco
   });
 
+  console.log(res);
   if (!res.ok) return null;
   return res.json();
 }
