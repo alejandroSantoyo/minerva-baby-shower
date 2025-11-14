@@ -42,8 +42,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 export default function AdminPage() {
-  const [key, setKey] = useState("test");
-  const [authorized, setAuthorized] = useState(true);
+  const [key, setKey] = useState("");
+  const [authorized, setAuthorized] = useState(false);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [isSnackOpen, setIsSnackOpen] = useState(false);
   const [filterBy, setFilterBy] = useState<
