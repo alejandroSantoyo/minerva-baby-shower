@@ -23,7 +23,6 @@ import {
   WHITE_COLOR,
 } from "constants/colors";
 import ConfirmationDialog from "../ui/ConfirmationDialog";
-import { BASE_URL } from "constants/appConstants";
 import { Invitation } from "app/[slug]/page";
 
 interface DetailItemProps {
@@ -156,6 +155,7 @@ export default function Details({ invitation }: DetailsProps) {
   };
 
   const handleConfirmInvitation = async () => {
+    console.log("confirmationAction", confirmationAction);
     const data = await fetch(
       `/api/invitation/${invitation.slug}/confirmation`,
       {
