@@ -26,15 +26,6 @@ export default function ConfirmationDialog({
 }: Readonly<ConfirmationDialogProps>) {
   const [action, setAction] = useState<"confirm" | "decline" | null>(null);
 
-  const handleClose = (confirmed: boolean) => {
-    if (confirmed && action === "confirm") {
-      console.log("Asistencia confirmada");
-    }
-    if (confirmed && action === "decline") {
-      console.log("No asistiré");
-    }
-  };
-
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{title}</DialogTitle>

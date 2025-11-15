@@ -7,7 +7,6 @@ export async function PATCH(
 ) {
   const { slug } = await props.params;
   const data = await req.json();
-  console.log("DATA :", data);
 
   const invitation = await prisma.invitation.update({
     where: { slug: slug },
