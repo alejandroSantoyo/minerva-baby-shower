@@ -2,6 +2,7 @@
 import {
   Alert,
   Button,
+  Link,
   Slider,
   Snackbar,
   Stack,
@@ -29,6 +30,7 @@ interface DetailItemProps {
   icon: SvgIconComponent;
   title: string;
   description: string;
+  externalUrl?: string;
 }
 
 interface GiftButtonProps {
@@ -44,16 +46,33 @@ interface DetailsProps {
 
 const CLABE = "6381 8000 0169 4925 53";
 
-const DetailItem = ({ icon: Icon, title, description }: DetailItemProps) => {
+const DetailItem = ({
+  icon: Icon,
+  title,
+  description,
+  externalUrl = undefined,
+}: DetailItemProps) => {
   return (
     <Stack alignItems="center" justifyContent="center" flex={1}>
       <Icon fontSize="large" sx={{ color: PINK_SECONDARY_COLOR }} />
       <Typography variant="subtitle1" mt={2} gutterBottom>
         {title}
       </Typography>
-      <Typography variant="body1" fontWeight="bold" textAlign="center">
-        {description}
-      </Typography>
+      {externalUrl ? (
+        <Link
+          href={externalUrl}
+          target="_blank"
+          sx={{ textDecoration: "none", color: PINK_SECONDARY_COLOR }}
+        >
+          <Typography variant="body1" fontWeight="bold" textAlign="center">
+            {description}
+          </Typography>
+        </Link>
+      ) : (
+        <Typography variant="body1" fontWeight="bold" textAlign="center">
+          {description}
+        </Typography>
+      )}
     </Stack>
   );
 };
@@ -139,6 +158,7 @@ export default function Details({ invitation }: DetailsProps) {
     {
       icon: PlaceIcon,
       title: "Lugar",
+      externalUrl: "https://maps.app.goo.gl/AB8y9yJhpa3TBijm7",
       description:
         "Salón de usos multiples. Cto Hacienda Tulipanes #398, Capellanía Residencial",
     },
