@@ -95,6 +95,24 @@ const getGuestText = (passes: number) => {
   return `${passes} persona`;
 };
 
+const AfterConfirmationCard = ({ invitation }: { invitation: Invitation }) => {
+  return (
+    <CustomCard
+      title="Gracias por confirmar tu asistencia"
+      background={PINK_PRIMARY_COLOR}
+    >
+      <Typography variant="h6" textAlign="center">
+        Nos hace muy felices poder compartir este día tan especial contigo. Si
+        aún no lo has hecho, te invitamos a revisar nuestra mesa de regalos.
+        ¡Gracias por tu cariño!
+      </Typography>
+      <Typography fontSize={18} fontWeight="bold">
+        Invitación valida para: {getGuestText(invitation.confirmedPasses || 0)}
+      </Typography>
+    </CustomCard>
+  );
+};
+
 export default function Details({ invitation }: DetailsProps) {
   const [usedPassess, setUsedPassess] = useState(1);
   const [isSnackOpen, setIsSnackOpen] = useState(false);
@@ -155,7 +173,6 @@ export default function Details({ invitation }: DetailsProps) {
   };
 
   const handleConfirmInvitation = async () => {
-    console.log("confirmationAction", confirmationAction);
     const data = await fetch(
       `/api/invitation/${invitation.slug}/confirmation`,
       {
@@ -170,7 +187,6 @@ export default function Details({ invitation }: DetailsProps) {
 
     if (data.ok) {
       const response = await data.json();
-      console.log("response", response);
       setIsModalOpen(false);
     }
   };
@@ -189,68 +205,73 @@ export default function Details({ invitation }: DetailsProps) {
       </CustomCard>
 
       {/* Confirmation */}
-      <CustomCard
-        title="Confirma tu Asistencia"
-        background={PINK_PRIMARY_COLOR}
-      >
-        <Typography fontSize={18}>
-          Pases restantes {invitation.totalPasses - usedPassess}
-        </Typography>
-        <Typography fontSize={18}>¿Cuántos pases utilizarás?</Typography>
+      {invitation.confirmed && (
+        <AfterConfirmationCard invitation={invitation} />
+      )}
+      {!invitation.confirmed && (
+        <CustomCard
+          title="Confirma tu Asistencia"
+          background={PINK_PRIMARY_COLOR}
+        >
+          <Typography fontSize={18}>
+            Pases restantes {invitation.totalPasses - usedPassess}
+          </Typography>
+          <Typography fontSize={18}>¿Cuántos pases utilizarás?</Typography>
 
-        <Slider
-          size="small"
-          max={invitation.totalPasses}
-          value={usedPassess}
-          onChange={(_, value) => setUsedPassess(value)}
-          sx={{
-            width: "80%",
-            color: PINK_SECONDARY_COLOR,
-            height: 4,
-            "& .MuiSlider-thumb": {
-              width: 14,
-              height: 14,
-              backgroundColor: WHITE_COLOR,
-              border: `2px solid ${PINK_SECONDARY_COLOR}`,
-            },
-            "& .MuiSlider-track": {
-              border: "none",
-            },
-            "& .MuiSlider-rail": {
-              opacity: 0.4,
-              backgroundColor: PINK_SECONDARY_COLOR,
-            },
-          }}
-        />
-
-        <Typography variant="h6" fontWeight="bold">
-          {usedPassess}
-          {usedPassess > 1 || usedPassess === 0 ? " Invitados" : " Invitado"}
-        </Typography>
-        <Stack spacing={2} direction="row">
-          <Button
-            variant="contained"
+          <Slider
+            size="small"
+            max={invitation.totalPasses}
+            value={usedPassess}
+            onChange={(_, value) => setUsedPassess(value)}
             sx={{
-              background: PINK_SECONDARY_COLOR,
-              fontWeight: "bold",
-            }}
-            onClick={() => handleConfirmationOpen("confirm")}
-          >
-            Confirmar
-          </Button>
-          <Button
-            variant="outlined"
-            sx={{
-              borderColor: PINK_SECONDARY_COLOR,
+              width: "80%",
               color: PINK_SECONDARY_COLOR,
-              fontWeight: "bold",
+              height: 4,
+              "& .MuiSlider-thumb": {
+                width: 14,
+                height: 14,
+                backgroundColor: WHITE_COLOR,
+                border: `2px solid ${PINK_SECONDARY_COLOR}`,
+              },
+              "& .MuiSlider-track": {
+                border: "none",
+              },
+              "& .MuiSlider-rail": {
+                opacity: 0.4,
+                backgroundColor: PINK_SECONDARY_COLOR,
+              },
             }}
-            onClick={() => handleConfirmationOpen("deny")}
-          >
-            No asistiré
-          </Button>
-        </Stack>
-      </CustomCard>
+          />
+
+          <Typography variant="h6" fontWeight="bold">
+            {usedPassess}
+            {usedPassess > 1 || usedPassess === 0 ? " Invitados" : " Invitado"}
+          </Typography>
+          <Stack spacing={2} direction="row">
+            <Button
+              variant="contained"
+              sx={{
+                background: PINK_SECONDARY_COLOR,
+                fontWeight: "bold",
+              }}
+              onClick={() => handleConfirmationOpen("confirm")}
+            >
+              Confirmar
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                borderColor: PINK_SECONDARY_COLOR,
+                color: PINK_SECONDARY_COLOR,
+                fontWeight: "bold",
+              }}
+              onClick={() => handleConfirmationOpen("deny")}
+            >
+              No asistiré
+            </Button>
+          </Stack>
+        </CustomCard>
+      )}
 
       {/* Gifts */}
       <CustomCard title="Mesas de Regalo" stackAlignItems="unset">
