@@ -132,7 +132,8 @@ const AfterConfirmationCard = ({ invitation }: { invitation: Invitation }) => {
   );
 };
 
-export default function Details({ invitation }: DetailsProps) {
+export default function Details({ invitation: invitationInfo }: DetailsProps) {
+  const [invitationData, setInvitation] = useState<Invitation>(invitationInfo);
   const [usedPassess, setUsedPassess] = useState(1);
   const [isSnackOpen, setIsSnackOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -194,7 +195,7 @@ export default function Details({ invitation }: DetailsProps) {
 
   const handleConfirmInvitation = async () => {
     const data = await fetch(
-      `/api/invitation/${invitation.slug}/confirmation`,
+      `/api/invitation/${invitationData.slug}/confirmation`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -207,6 +208,8 @@ export default function Details({ invitation }: DetailsProps) {
 
     if (data.ok) {
       const response = await data.json();
+      setInvitation(response);
+      console.log("response", response);
       setIsModalOpen(false);
     }
   };
@@ -225,22 +228,22 @@ export default function Details({ invitation }: DetailsProps) {
       </CustomCard>
 
       {/* Confirmation */}
-      {invitation.confirmed && (
-        <AfterConfirmationCard invitation={invitation} />
+      {invitationData.confirmed && (
+        <AfterConfirmationCard invitation={invitationData} />
       )}
-      {!invitation.confirmed && (
+      {!invitationData.confirmed && (
         <CustomCard
           title="Confirma tu Asistencia"
           background={PINK_PRIMARY_COLOR}
         >
           <Typography fontSize={18}>
-            Pases restantes {invitation.totalPasses - usedPassess}
+            Pases restantes {invitationData.totalPasses - usedPassess}
           </Typography>
           <Typography fontSize={18}>¿Cuántos pases utilizarás?</Typography>
 
           <Slider
             size="small"
-            max={invitation.totalPasses}
+            max={invitationData.totalPasses}
             value={usedPassess}
             onChange={(_, value) => setUsedPassess(value)}
             sx={{
