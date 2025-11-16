@@ -209,7 +209,6 @@ export default function Details({ invitation: invitationInfo }: DetailsProps) {
     if (data.ok) {
       const response = await data.json();
       setInvitation(response);
-      console.log("response", response);
       setIsModalOpen(false);
     }
   };
